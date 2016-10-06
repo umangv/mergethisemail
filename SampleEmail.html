@@ -1,0 +1,6 @@
+<h3><?= subject; ?></h3>
+<?= from; ?><br/>
+<span class="draftto">To: <?= to; ?></span><br/>
+<? if(d.getCc() != "") { ?> <span class="draftto">CC: <?= d.getCc(); ?></span><br/><? } ?>
+<? if(d.getBcc() != "") { ?> <span class="draftto">BCC: <?= d.getBcc(); ?></span><br/><? } ?>
+<div class="draft"><?!= body; ?></div>

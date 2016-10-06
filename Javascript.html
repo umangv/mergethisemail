@@ -1,0 +1,94 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+  var di = 0;
+  var numdatarows = 1;
+  var ddd;
+  var step1;
+  
+  $(function () {
+    ddd = $("#draftdropdown");
+    step1 = $(".step1");
+    
+    $("#fetch").click(function () {
+      step1.hide();
+      ddd.empty();
+      ddd.append($("<option value='-1'>Loading...</option>"));
+      ddd.show();
+      showSample();
+      google.script.run.withFailureHandler(fail).withSuccessHandler(showDrafts).getDrafts();
+      return;
+    });
+    
+    google.script.run.withFailureHandler(fail).withSuccessHandler(function(n) { numdatarows = n; }).getNumDataRows();
+    
+    ddd.change(showSample);
+
+    $("#prevsample").click(function () {updateRowIndex(-1); });
+    $("#nextsample").click(function () { updateRowIndex(1); });
+    
+    $("#send").click(function () {
+      $("#send").prop("disabled", true);
+      google.script.run.withFailureHandler(fail).withSuccessHandler(google.script.host.close).sendEmails(ddd.val());
+    });
+  });
+  
+  function showDrafts(drafts) {
+    ddd.empty();
+    ddd.append($("<option value='-1'>Select</option>"));
+    for (var i = 0; i < drafts.length; i++) {
+      d = drafts[i];
+      op = $("<option>");
+      op.attr("value", d["id"]);
+      op.html(d["subject"]);
+      ddd.append(op);
+    }
+    showSample();
+  }
+  
+  function showSample()
+  {
+    id = ddd.val();
+    var dSample = $("#sampleemail");
+    if (id == "-1") {
+      dSample.html("Select a draft from the drop-down above.");
+      $("#rownavigation").hide();
+    }
+    else
+    {
+      $("#sampleemail").css("color", "#999"); //grey out email until new email is populated
+      google.script.run.withFailureHandler(fail).withSuccessHandler(populateSample).getSampleEmail(id, di);
+    }
+    $("#sample").show();
+  }
+  
+  function populateSample(content)
+  {
+    $("#sampleemail").html(content);
+    $("#sampleemail").css("color", "#000"); //don't grey out email anymore
+    $("#rowindex").html(String(di+1) + "/" + String(numdatarows));
+    $("#rownavigation").show();
+  }
+  
+  function updateRowIndex(change)
+  {
+    change = change || 0;
+    var tempdi = Math.max(Math.min(di + change, numdatarows - 1), 0);
+    $("#prevsample").prop("disabled", tempdi == 0);
+    $("#nextsample").prop("disabled", tempdi == numdatarows -1);
+    if (tempdi != di)
+    {
+      di = tempdi;
+      showSample();
+    }
+  }
+  
+  
+  function fail(e)
+  {
+    $("#explanation").text(e.message);
+    $("#showerror").click(function () { $("#explanation").show(); $("#showerror").prop("disabled", true); });
+    $("#error").show();
+    $("#main").hide();
+  }
+  
+</script>

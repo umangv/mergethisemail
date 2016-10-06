@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include("CSS"); ?>
+  </head>
+  <body>
+  <div id="main">
+    <ul class="step1 fa-ul spacious">
+      <li><i class="fa-li fa fa-pencil" aria-hidden="true"></i> Write a draft email whose subject begins with <span class="code">[merge]</span>. This will not appear in the email that will be sent.</li>
+      <li><i class="fa-li fa fa-table" aria-hidden="true"></i> The first row of your spreadsheet should be column names (e.g., "to", "FirstName"). Don't use spaces in column names. </li> 
+      <li><i class="fa-li fa fa-tags" aria-hidden="true"></i> Tags like <span class="code">{{firstname}}</span> in your email will be replaced by the entry under the FirstName column in the spreadsheet. (Always use lowercase tags in your email template, even if the column name in the spreadsheet is not lowercase).</li>
+      <li><i class="fa-li fa fa-paper-plane" aria-hidden="true"></i> Make sure spreadsheet has a column named "to" with the email addresses of recipients.</li>
+      <li><i class="fa-li fa fa-picture-o" aria-hidden="true"></i> You may include images and attachemnts in your template. Images will be sent even though they will not appear in the preview here.</li>
+    </ul>
+    <p>
+      <select id="draftdropdown" class="hidden"><option value="-1">-- Click "Fetch" to see drafts here --</option></select>
+      <button id="fetch" class="action">Fetch Drafts</button>
+    </p>
+    <div id="draftinfo"></div>
+    <div id="sample" class="hidden">
+      <div id="sampleemail">Loading...
+      </div>
+      <div id="rownavigation">
+        <p><button id="prevsample" class="action"> &lsaquo; Previous</button> 
+        <span id="rowindex"></span>
+        <button id="nextsample" class="action">Next &rsaquo; </button></p>
+        <p><button id="send" class="action">Send</button></p>
+      </div>
+    </div>
+  </div>
+  <div id="error" class="hidden">
+    <i class="fa fa-exclamation-triangle fa-4x erroricon" aria-hidden="true"></i>
+    <p class="errormessage">An error occured! Please close this MergeThisEmail window and try again. If this error persists, please contact the developer with error information and how you reached this error.</p>
+    <p><button id="showerror">More info</button></p>
+    <div id="explanation" class="hidden">
+    </div>
+  </div>
+    
+    <?!= include("Javascript"); ?>
+  </body>
+</html>
