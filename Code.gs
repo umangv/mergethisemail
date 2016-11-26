@@ -21,8 +21,8 @@
  */
 
 
-var MPREFIX = "[merge]";
-var MPREFIX_LENGTH = 7;
+var MPREFIX = ""; // Used to be "[merge]";
+var MPREFIX_LENGTH = 0; //Used to be 7;
 
 function onOpen() {
   SpreadsheetApp.getUi()
