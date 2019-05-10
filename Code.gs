@@ -73,6 +73,12 @@ function sendEmails(draftid)
     throw "Message id does not correspond to a draft!";
   var rows = getData();
   var ii = getInlineImages(draft);
+  var attachments = draft.getAttachments();
+  if (!Array.isArray(attachments) || !attachments.length) {
+    var initialOptions = {};
+  } else {
+    var initialOptions = {"attachments":attachments}; 
+  }
   for (var i = 0; i < rows.length; i++) {
     var row = rows[i];
     var recipient = row["to"];
@@ -81,12 +87,20 @@ function sendEmails(draftid)
     var body = Mustache.render(ii[0], row);
     var cc = draft.getCc();
     var bcc = draft.getBcc();
-    var options = {"bcc": bcc, "cc": cc, "htmlBody": body, "inlineImages": ii[1]};
+    var options = buildOptions(initialOptions, bcc, cc, body, ii[1]);
     var sender = getAlias(draft.getFrom());
     if (sender != "me")
       options["from"] = sender;
     GmailApp.sendEmail(recipient, subject, plainbody, options);
   }
+}
+
+function buildOptions(options, bcc, cc, body, inlineImages) {
+  options["bcc"] = bcc;
+  options["cc"] = cc;
+  options["body"] = body;
+  options["inlineImages"] = inlineImages;
+  return options;
 }
 
 function getInlineImages(draft)
